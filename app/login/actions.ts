@@ -9,21 +9,6 @@ export async function logout() {
   redirect("/login");
 }
 
-export async function getToken(): Promise<string | null> {
-  try {
-    const userCookie = (await cookies()).get("user");
-    if (!userCookie) return null;
-
-    const user = JSON.parse(userCookie.value);
-    const token = user.jwt;
-
-    return typeof token === "string" ? token : null;
-  } catch (e) {
-    console.error("Invalid cookie", e);
-    return null;
-  }
-}
-
 export async function getUsername(): Promise<string | null> {
   try {
     const cookieStore = await cookies();
