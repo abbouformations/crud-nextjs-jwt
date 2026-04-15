@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ActionResponse, error, success } from "@/lib/ActionResponse";
+import { error, success } from "@/lib/ActionResponse";
 import { API, fetchWithjwt } from "@/lib/fetchWithJwt";
 
 export async function createArticle(prevState: any, formData: FormData) {
@@ -26,7 +26,10 @@ export async function createArticle(prevState: any, formData: FormData) {
       return error(msg.message || "Erreur lors de la création");
     }
     revalidatePath("/articles");
-    return success(msg.message);
+    return {
+      ...success(msg.message),
+      redirectTo: "/articles",
+    };
   } catch (e) {
     return error("Erreur serveur");
   }
@@ -36,7 +39,7 @@ export async function updateArticle(
   id: number,
   prevState: any,
   formData: FormData,
-): Promise<ActionResponse> {
+) {
   const article = {
     description: formData.get("description") as string,
     price: Number(formData.get("price")),
@@ -55,7 +58,10 @@ export async function updateArticle(
       return error(msg.message || "Erreur lors de la modification");
     }
     revalidatePath("/articles");
-    return success(msg.message);
+    return {
+      ...success(msg.message),
+      redirectTo: "/articles",
+    };
   } catch (e) {
     return error("Erreur serveur");
   }
